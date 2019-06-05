@@ -1,0 +1,97 @@
+<html>
+<head>
+<style>
+.holder{
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	display: inline-block;
+	transform: translate(-50%, -50%);
+}
+</style>
+</head>
+<body>
+
+<div class="holder">
+	<canvas id="canvas" height=400 width=600 style="background-color: grey"></canvas>
+</div>
+	
+<script>
+  window.addEventListener("keydown", this.keyCheck, false); // input hack
+
+  var canvas = document.getElementById("canvas");
+  var ctx = canvas.getContext("2d");
+  var circleD = 10;
+  var velocity = 10;
+  var posX = canvas.width/2, posY = canvas.height/2;
+
+  function keyCheck(e){ // W = 87, S = 83, A = 65, D = 68
+    if(e.keyCode == 87 || e.keyCode == 38){ // go UP
+	    if(posY-velocity-circleD < 0){
+    		posY = canvas.height - circleD;
+    	}
+    	else{
+    		posY-=velocity;
+    	}
+    }
+    if(e.keyCode == 83 || e.keyCode == 40){ // go DOWN
+      	if(posY+velocity+circleD > canvas.height){
+    		posY = circleD;
+    	}
+    	else{
+    		posY+=velocity;
+    	}
+    }
+    if(e.keyCode == 65 || e.keyCode == 37){ // go LEFT
+    	if(posX-velocity-circleD < 0){
+    		posX = canvas.width - circleD;
+    	}
+    	else{
+    		posX-=velocity;
+    	}
+    }
+    if(e.keyCode == 68 || e.keyCode == 39){ // go RIGHT
+		if(posX+velocity+circleD > canvas.width){
+			posX = circleD;
+		}
+		else{
+			posX+=velocity;
+		}
+    }
+  }
+
+  (function draw(){
+    drawTerrain();
+
+    ctx.beginPath();
+    ctx.arc(posX, posY, circleD, 0, 2 * Math.PI);
+    ctx.fillStyle = 'rgba(255,0,0,1)';
+    ctx.fill();
+
+    requestAnimationFrame(draw);
+  })();
+
+  function drawTerrain(){
+  	ctx.fillStyle = "rgba(0,255,50,0.1)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.strokeStyle = 'rgba(255,255,255,1)';
+    ctx.beginPath();
+    ctx.arc(canvas.width/2, canvas.height/2, canvas.height/6, 0, 2 * Math.PI);
+    //middle line
+    ctx.moveTo(canvas.width/2, 0);
+    ctx.lineTo(canvas.width/2, canvas.height);
+    //top line
+    ctx.moveTo(0, 10);
+    ctx.lineTo(canvas.width, 10);
+    //bottom line
+    ctx.moveTo(0, canvas.height - 10);
+    ctx.lineTo(canvas.width, canvas.height - 10);
+    //left box
+    ctx.strokeRect(0, canvas.height/4, canvas.width/4, canvas.height - canvas.height/2);
+    //right box
+    ctx.strokeRect(canvas.width - canvas.width/4, canvas.height/4, canvas.width/4, canvas.height - canvas.height/2);
+    ctx.stroke();
+  }
+</script>
+</body>
+</html>
